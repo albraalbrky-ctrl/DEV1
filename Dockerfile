@@ -1,20 +1,18 @@
-# 1. مرحلة البناء والتجهيز
+# مرحلة البناء
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
 WORKDIR /app
 
-# نسخ كل شيء في المجلد الرئيسي أولاً لضمان عدم ضياع أي ملف
-COPY . ./
-
-# عمل Restore للمكتبات بناءً على الملفات المنسوخة
+# نسخ ملف المشروع وعمل ريستور
+COPY DEV1.csproj ./
 RUN dotnet restore
 
-# بناء النسخة النهائية للإنتاج
-RUN dotnet publish -c Release -o out
+# نسخ باقي الملفات وعمل البناء النهائي
+COPY . ./
+RUN dotnet publish DEV1.csproj -c Release -o out
 
-# 2. مرحلة التشغيل الفعلي على السيرفر
+# مرحلة التشغيل
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build-env /app/out .
 
-# أمر تشغيل المشروع الفاخر
 ENTRYPOINT ["dotnet", "DEV1.dll"]
