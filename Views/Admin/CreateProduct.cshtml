@@ -1,0 +1,49 @@
+@model DEV1.Models.Product
+@{
+    ViewData["Title"] = "إضافة منتج";
+}
+<div class="container mt-4 text-end" dir="rtl">
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+            <div class="card shadow p-4 border-0">
+                <h3 class="mb-4 text-center">➕ إضافة منتج جديد إلى المتجر</h3>
+                <form asp-action="CreateProduct" method="post">
+                    <div class="form-group mb-3">
+                        <label asp-for="Name" class="form-label fw-bold">اسم المنتج</label>
+                        <input asp-for="Name" class="form-control" required />
+                    </div>
+                    <div class="form-group mb-3">
+                        <label asp-for="CategoryId" class="form-label fw-bold">إسناد إلى قسم (الصنف)</label>
+                        <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId" required>
+                            <option value="">-- اختر القسم المناسب --</option>
+                        </select>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label asp-for="Description" class="form-label fw-bold">الوصف</label>
+                        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label asp-for="Price" class="form-label fw-bold">السعر</label>
+                                <input asp-for="Price" class="form-control" type="number" step="0.01" required />
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label asp-for="Stock" class="form-label fw-bold">الكمية الابتدائية (المخزون)</label>
+                                <input asp-for="Stock" class="form-control" type="number" min="0" required />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group mb-4">
+                        <label asp-for="ImageUrl" class="form-label fw-bold">رابط الصورة</label>
+                        <input asp-for="ImageUrl" class="form-control" placeholder="/images/example.jpg" />
+                    </div>
+                    <button type="submit" class="btn btn-success btn-lg w-100 py-2">حفظ ونشر المنتج في المتجر 🚀</button>
+                    <a asp-action="Dashboard" class="btn btn-light w-100 mt-2">إلغاء والعودة</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

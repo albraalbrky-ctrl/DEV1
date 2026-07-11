@@ -1,0 +1,113 @@
+@{
+    ViewData["Title"] = "تتبع طلبك";
+}
+<style>
+    .glass-panel {
+        background: rgba(15, 20, 17, 0.96); 
+        border: 2px solid var(--gold-matt); 
+        border-radius: 24px;
+    }
+    .form-control-luxury {
+        background: rgba(255, 255, 255, 0.08) !important;
+        border: 1px solid rgba(220, 167, 98, 0.5) !important;
+        color: #ffffff !important;
+        border-radius: 50px !important;
+        font-weight: bold;
+    }
+    .form-control-luxury::placeholder {
+        color: #cbd5e1 !important; 
+    }
+    /* 🌟 جعل نص الزر أسود غامق وواضح جداً فوق الذهبي */
+    .btn-search-clear {
+        background: var(--gold-matt) !important;
+        color: #141916 !important; 
+        font-weight: 800 !important;
+        border-radius: 50px !important;
+        border: none !important;
+        transition: all 0.3s ease;
+    }
+    .btn-search-clear:hover {
+        background: #ffffff !important;
+        color: #141916 !important;
+    }
+    .status-card-glow {
+        border: 1px solid var(--gold-matt);
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 20px;
+    }
+    .text-clear-white {
+        color: #ffffff !important;
+        font-weight: 700;
+    }
+    .text-gold-value {
+        color: #fcd34d !important; 
+        font-weight: 800;
+    }
+</style>
+
+<div class="container mt-5 text-end" dir="rtl">
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+            <div class="card glass-panel p-5 shadow-lg">
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold" style="color: #ffffff;">🔍 الاستعلام عن حالة الشحنة</h2>
+                    <p class="fs-6" style="color: #cbd5e1 !important;">أدخلي كود طلبيتك الخاص لمشاهدة تفاصيل التجهيز حياً</p>
+                </div>
+
+                <div class="input-group mb-4">
+                    <input type="text" id="orderCodeInput" class="form-control form-control-lg form-control-luxury text-center font-monospace" placeholder="ORD-XXXXXXXX" style="letter-spacing: 1px;" />
+                    <button onclick="trackOrderNow()" class="btn btn-search-clear btn-lg ms-2 px-4" type="button">استعلام فوراً 🚀</button>
+                </div>
+
+                <div id="resultBox" class="status-card-glow mt-4 p-4" style="display: none;">
+                    <h4 class="text-center mb-4 fw-bold" style="color: var(--gold-matt);">📋 تفاصيل الفاتورة المسترجعة</h4>
+                    <div class="row g-3 fs-5 px-2">
+                        <div class="col-6 text-clear-white">كود الطلب الفريد:</div><div class="col-6 text-gold-value font-monospace" id="lblCode"></div>
+                        <div class="col-6 text-clear-white">اسم المشتري:</div><div class="col-6 text-gold-value" id="lblCustomer"></div>
+                        <div class="col-6 text-clear-white">القطع والكمية:</div><div class="col-6 text-gold-value" id="lblProduct"></div>
+                        <div class="col-6 text-clear-white">الحساب الإجمالي:</div><div class="col-6 text-gold-value text-danger" id="lblTotal"></div>
+                        
+                        <div class="col-12 text-center mt-4">
+                            <hr style="background-color: rgba(220,167,98,0.3); height: 2px;">
+                            <div id="lblStatus" class="fs-4 fw-bold p-3 rounded-pill d-inline-block shadow"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="errorBox" class="alert alert-danger bg-dark text-danger text-center mt-3 border-danger" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function trackOrderNow() {
+            var code = $('#orderCodeInput').val();
+            $('#resultBox').hide();
+            $('#errorBox').hide();
+
+            $.get('/Home/GetOrderStatus', { orderCode: code }, function(res) {
+                if (res.success) {
+                    $('#lblCode').text(res.code);
+                    $('#lblCustomer').text(res.customer);
+                    $('#lblProduct').text(res.product + " (العدد: " + res.qty + ")");
+                    $('#lblTotal').text(res.total + " د.إ");
+                    
+                    var statusBadge = $('#lblStatus');
+                    if (res.status === "تم التسليم بنجاح") {
+                        statusBadge.css({'color': '#22c55e', 'background': 'rgba(34, 197, 94, 0.2)', 'border': '2px solid #22c55e'});
+                        statusBadge.text("✅ تم إيصال شحنتكِ بنجاح");
+                    } else {
+                        statusBadge.css({'color': '#eab308', 'background': 'rgba(234, 179, 8, 0.2)', 'border': '2px solid #eab308'});
+                        statusBadge.text("⏳ قيد التجهيز الفاخر والتغليف");
+                    }
+
+                    $('#resultBox').slideDown(400);
+                } else {
+                    $('#errorBox').text(res.msg).fadeIn(300);
+                }
+            });
+        }
+    </script>
+}

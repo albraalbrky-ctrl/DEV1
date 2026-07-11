@@ -1,0 +1,31 @@
+@{
+    ViewData["Title"] = "تم الطلب بنجاح";
+    var orderCode = TempData["LatestOrderCode"]?.ToString() ?? "ORD-XXXXXX";
+    // قم بتغيير هذا الرقم لرقم واتساب متجرك الحقيقي بدون أصفار أو علامة +
+    var whatsappNumber = "218923097849"; 
+    var whatsappMessage = Uri.EscapeDataString($"مرحباً متجر DEV1، أود الاستفسار عن حالة طلبي ذو الكود: {orderCode}");
+}
+
+<div class="container mt-5 text-center" dir="rtl">
+    <div class="alert alert-success p-5 shadow border-0 rounded-3">
+        <h1 class="display-4 text-success">🎉 تم استلام طلبك بنجاح!</h1>
+        <p class="lead mt-3 text-secondary">شكرًا لتسوقك معنا. كود الطلب الخاص بك هو:</p>
+        
+        <div class="d-inline-block bg-white text-dark border border-success px-4 py-2 my-3 rounded fs-3 fw-bold shadow-sm font-monospace">
+            @orderCode
+        </div>
+        
+        <p class="text-muted">يرجى حفظ هذا الكود لمتابعة حالة شحنتك.</p>
+        <hr class="my-4">
+        
+        <h5>📱 لمعرفة حالة طلبك (تحت التجهيز / تم التسليم)، تواصل معنا مباشرة عبر الواتساب:</h5>
+        
+        <a href="https://wa.me/@whatsappNumber?text=@whatsappMessage" target="_blank" class="btn btn-success btn-lg px-4 py-3 mt-3 fw-bold shadow">
+            💬 تواصل معنا عبر الواتساب الآن
+        </a>
+        
+        <div class="mt-4">
+            <a asp-controller="Products" asp-action="Index" class="btn btn-outline-secondary">العودة للمتجر</a>
+        </div>
+    </div>
+</div>

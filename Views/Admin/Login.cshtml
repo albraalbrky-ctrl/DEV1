@@ -1,0 +1,20 @@
+@{
+    ViewData["Title"] = "دخول الإدارة";
+}
+<div class="container mt-5 text-end" dir="rtl">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow border-0 p-4">
+                <h3 class="text-center mb-4">🔐 لوحة تحكم صاحب المتجر</h3>
+                <form asp-action="Login" method="post">
+                    <div class="text-danger mb-3" asp-validation-summary="ModelOnly"></div>
+                    <div class="form-group mb-3">
+                        <label class="form-label fw-bold">أدخل الرمز السري للدخول:</label>
+                        <input type="password" name="secretKey" class="form-control form-control-lg text-center" placeholder="••••••••" required />
+                    </div>
+                    <button type="submit" class="btn btn-dark btn-lg w-100">دخول</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,49 @@
+@model DEV1.Models.Product
+
+@{
+    ViewData["Title"] = "إضافة منتج";
+}
+
+<div class="container mt-4">
+    <h2>إضافة منتج جديد</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Create">
+                <div class="form-group mb-3">
+                    <label asp-for="Name" class="control-label">اسم المنتج</label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Description" class="control-label">الوصف</label>
+                    <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Price" class="control-label">السعر</label>
+                    <input asp-for="Price" class="form-control" type="number" step="0.01" />
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="ImageUrl" class="control-label">رابط الصورة</label>
+                    <input asp-for="ImageUrl" class="form-control" />
+                    <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="CategoryId" class="control-label">الفئة</label>
+                    <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId">
+                        <option value="">-- اختر الفئة --</option>
+                    </select>
+                    <span asp-validation-for="CategoryId" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-success">حفظ المنتج</button>
+                <a asp-action="Index" class="btn btn-secondary">إلغاء</a>
+            </form>
+        </div>
+    </div>
+</div>

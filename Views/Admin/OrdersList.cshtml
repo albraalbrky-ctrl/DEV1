@@ -1,0 +1,74 @@
+@model IEnumerable<DEV1.Models.Order>
+@{
+    ViewData["Title"] = "إدارة الطلبات";
+}
+<div class="container mt-4 text-end" dir="rtl">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">📋 سجل طلبات LOKA STORE</h2>
+        <a asp-action="Dashboard" class="btn btn-outline-dark">العودة للمخزون</a>
+    </div>
+
+    <div class="card p-3 border-0 shadow-sm mb-4 bg-light">
+        <form asp-action="OrdersList" method="get" class="row g-3 align-items-center">
+            <div class="col-md-9">
+                <input type="text" name="searchTerm" value="@ViewBag.SearchTerm" class="form-control form-control-lg" placeholder="🔍 ابحث عن الطلب باستخدام كود الطلب الفريد أو اسم الزبون..." />
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-dark btn-lg w-100 fw-bold">ابدأ البحث</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="card shadow border-0 p-4 rounded-3">
+        @if (!Model.Any())
+        {
+            <div class="text-center py-5">
+                <p class="fs-5 text-muted">لا توجد أي طلبات تطابق بحثك حالياً.</p>
+                <a asp-action="OrdersList" class="btn btn-link">عرض جميع الطلبات</a>
+            </div>
+        }
+        else
+        {
+            <table class="table align-middle text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>كود الطلب</th>
+                        <th>الزبون والعنوان</th>
+                        <th>رقم الهاتف</th>
+                        <th>المنتج والكمية</th>
+                        <th>الإجمالي</th>
+                        <th>حالة الطلب</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="fw-bold text-primary font-monospace">@item.OrderCode</td>
+                            <td><strong>@item.CustomerName</strong><br><small class="text-muted">@item.Address</small></td>
+                            <td>@item.PhoneNumber</td>
+                            <td>@item.Product?.Name <span class="badge bg-secondary">×@item.Quantity</span></td>
+                            <td class="text-danger fw-bold">@item.TotalPrice.ToString("0.00") د.إ</td>
+                            <td>
+                                <select onchange="changeStatus(@item.Id, this.value)" class="form-select text-center fw-bold @(item.Status == "تم التسليم بنجاح" ? "text-success border-success" : "text-warning border-warning")">
+                                    <!option value="تحت التجهيز" @(item.Status == "تحت التجهيز" ? "selected" : "")>⏳ تحت التجهيز</!option>
+                                    <!option value="تم التسليم بنجاح" @(item.Status == "تم التسليم بنجاح" ? "selected" : "")>✅ تم التسليم بنجاح</!option>
+                                </select>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function changeStatus(id, statusValue) {
+            $.post('/Admin/UpdateOrderStatus', { orderId: id, newStatus: statusValue }, function(res) {
+                if(res.success) alert('تمت تحديث الحالة بنجاح 🚀');
+            });
+        }
+    </script>
+}

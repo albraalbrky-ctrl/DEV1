@@ -1,0 +1,91 @@
+@model IEnumerable<DEV1.Models.Product>
+@{
+    ViewData["Title"] = "لوحة التحكم";
+}
+<style>
+    .stat-card {
+        border: none;
+        border-radius: 15px;
+        transition: transform 0.3s ease;
+    }
+    .stat-card:hover { transform: scale(1.05); }
+    .table-container { background: white; border-radius: 15px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+</style>
+
+<div class="container mt-4 text-end" dir="rtl">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">📊 إدارة متجر LOKA STORE</h2>
+        <div>
+            <a asp-action="OrdersList" class="btn btn-primary px-4 fw-bold shadow-sm">📋 إدارة طلبات الزبائن</a>
+            <a asp-action="Logout" class="btn btn-outline-danger px-3">تسجيل الخروج</a>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-3"><div class="card stat-card p-3 bg-dark text-white shadow-sm"><h6>إجمالي القطع</h6><h3>@ViewBag.TotalProducts</h3></div></div>
+        <div class="col-md-3"><div class="card stat-card p-3 bg-warning text-dark shadow-sm"><h6>شبه منتهية (≤2)</h6><h3>@ViewBag.LowStockCount</h3></div></div>
+        <div class="col-md-3"><div class="card stat-card p-3 bg-danger text-white shadow-sm"><h6>نفدت بالكامل</h6><h3>@ViewBag.OutOffStockCount</h3></div></div>
+        <div class="col-md-3"><div class="card stat-card p-3 bg-success text-white shadow-sm"><h6>الطلبات المستلمة</h6><h3>@ViewBag.TotalOrders</h3></div></div>
+    </div>
+
+    <div class="table-container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="fw-bold m-0 text-secondary">📦 مخزون المنتجات الحالي</h4>
+            <a asp-action="CreateProduct" class="btn btn-success fw-bold px-4">➕ إضافة منتج جديد</a>
+        </div>
+
+        <table class="table table-hover text-center align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>المنتج</th>
+                    <th>القسم</th>
+                    <th>السعر (د.إ)</th>
+                    <th>المخزون</th>
+                    <th>الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr id="row-@item.Id" style="transition: all 0.5s ease;">
+                        <td class="fw-bold text-dark">@item.Name</td>
+                        <td><span class="badge bg-light text-dark fs-6">@item.Category?.Name</span></td>
+                        <td><input type="number" step="0.01" class="form-control text-center mx-auto price-input fw-bold" value="@item.Price" style="width: 110px;" /></td>
+                        <td><input type="number" class="form-control text-center mx-auto stock-input fw-bold" value="@item.Stock" style="width: 90px;" /></td>
+                        <td>
+                            <button onclick="updateProduct(@item.Id)" class="btn btn-outline-primary btn-sm px-3 fw-bold">تحديث</button>
+                            <button onclick="deleteProduct(@item.Id)" class="btn btn-outline-danger btn-sm px-3 fw-bold">حذف 🗑️</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function updateProduct(id) {
+            var row = $('#row-' + id);
+            var stock = row.find('.stock-input').val();
+            var price = row.find('.price-input').val();
+
+            $.post('/Admin/UpdateStock', { productId: id, newStock: stock, newPrice: price }, function(res) {
+                alert('تم التحديث بنجاح! ✨');
+            });
+        }
+
+        function deleteProduct(id) {
+            if (confirm('هل أنت متأكد من حذف هذا المنتج نهائياً من المعرض؟')) {
+                $.post('/Admin/DeleteProduct', { id: id }, function(res) {
+                    if (res.success) {
+                        // حركة اختفاء ناعمة للسطر المحذوف
+                        $('#row-' + id).css('background', '#f8d7da').fadeOut(500);
+                    } else {
+                        alert(res.message);
+                    }
+                });
+            }
+        }
+    </script>
+}

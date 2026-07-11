@@ -1,0 +1,66 @@
+@{
+    ViewData["Title"] = "اتصلي بنا";
+}
+<style>
+    .contact-card {
+        background: rgba(20, 26, 23, 0.9); 
+        border: 1px solid rgba(220, 167, 98, 0.3); 
+        border-radius: 24px; 
+        transition: all 0.3s ease;
+    }
+    .contact-card:hover { 
+        transform: translateY(-5px); 
+        border-color: var(--gold-matt);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.5); 
+    }
+    .icon-box { font-size: 3rem; margin-bottom: 15px; }
+    .text-bright-white { color: #ffffff !important; }
+    .text-bright-gold { color: #fcd34d !important; }
+    .text-light-desc { color: #cbd5e1 !important; }
+    
+    /* 🌟 زر ممتلئ وبارز جداً لـ "تتبع طلبك" */
+    .btn-track-filled {
+        background: var(--gold-matt) !important;
+        color: #141916 !important;
+        font-weight: 800 !important;
+        border-radius: 50px !important;
+        border: none !important;
+        padding: 12px 0 !important;
+        transition: all 0.3s ease;
+    }
+    .btn-track-filled:hover {
+        background: #ffffff !important;
+        color: #141916 !important;
+        transform: scale(1.02);
+    }
+</style>
+
+<div class="container mt-5 text-center" dir="rtl">
+    <div class="mb-5">
+        <h1 class="fw-bold text-bright-white">✨ تواصلوا مع لـوكـا سـتـور - LOKA STORE ✨</h1>
+        <p class="lead text-bright-gold">يسعدنا دائماً تقديم المساعدة والإجابة على كل استفساراتكم حول منتجاتنا وشحناتكم</p>
+    </div>
+
+    <div class="row g-4 justify-content-center mt-3">
+        <!-- كرت الواتساب -->
+        <div class="col-md-5">
+            <div class="card contact-card p-4 shadow-sm h-100">
+                <div class="icon-box">💬</div>
+                <h4 class="fw-bold text-bright-white">المحادثة المباشرة</h4>
+                <p class="text-light-desc text-center flex-grow-1 fs-6">تواصلوا معنا مباشرة عبر تطبيق الواتساب للاستفسارات السريعة وخدمة العملاء الفورية</p>
+                <a href="https://wa.me/971500000000" target="_blank" class="btn btn-success btn-lg w-100 fw-bold rounded-pill shadow mt-3">راسلنا واتساب 🟢</a>
+            </div>
+        </div>
+
+        <!-- كرت تتبع الشحنة المطور -->
+        <div class="col-md-5">
+            <div class="card contact-card p-4 shadow-sm h-100">
+                <div class="icon-box">📦</div>
+                <h4 class="fw-bold text-bright-white">حالة طلبيتك الحالية</h4>
+                <p class="text-light-desc text-center flex-grow-1 fs-6">إذا كنت تمتلك كود الشحنة المكون من 8 حقول، تتبعها الآن حياً عبر نظام الاستعلام الخاص بنا</p>
+                <!-- الزر الممتلئ والواضح -->
+                <a asp-action="TrackOrder" class="btn btn-track-filled btn-lg w-100 shadow mt-3">🔍 تتبع طلبك الآن</a>
+            </div>
+        </div>
+    </div>
+</div>
