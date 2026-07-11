@@ -2,16 +2,16 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
 WORKDIR /app
 
-# نسخ ملف الـ Solution وملف المشروع من المجلد الفرعي بعمل Restore صحيح
-COPY *.sln ./
-COPY DEV1/*.csproj ./DEV1/
+# نسخ كل شيء في المجلد الرئيسي أولاً لضمان عدم ضياع أي ملف
+COPY . ./
+
+# عمل Restore للمكتبات بناءً على الملفات المنسوخة
 RUN dotnet restore
 
-# نسخ باقي ملفات المشروع بالكامل وبناء النسخة النهائية
-COPY . ./
-RUN dotnet publish DEV1/DEV1.csproj -c Release -o out
+# بناء النسخة النهائية للإنتاج
+RUN dotnet publish -c Release -o out
 
-# 2. مرحلة التشغيل الفعلي على سيرفر لينكس
+# 2. مرحلة التشغيل الفعلي على السيرفر
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build-env /app/out .
